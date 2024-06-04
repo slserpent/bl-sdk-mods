@@ -2,10 +2,10 @@ import unrealsdk
 from Mods.ModMenu import RegisterMod, SDKMod, Keybind, EnabledSaveType, Mods, ModTypes
 
 class DayNight(SDKMod):
-    Name: str = "Day/Night Cycle Changer"
+    Name: str = "Time of Day Changer"
     Author: str = "Snake"
     Description: str = (
-        "Changes the time of day ingame."
+        "Allows changing the current in-game time of day."
     )
     Version: str = "1.0"
     Types: ModTypes = ModTypes.Utility
