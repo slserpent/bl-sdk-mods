@@ -1,0 +1,44 @@
+{
+  "defaults": {
+    "authors": "Snake",
+    "source": "https://github.com/slserpent/bl-sdk-mods/",
+    "supports": ["BL2"],
+    "license": "Creative Commons Attribution Share Alike 4.0 International"
+  },
+  "mods": [
+    {
+      "name": "Weapon Debug",
+      "description": [
+        "Adds on-screen real-time weapon statistics and/or part attributes displays."
+      ],
+      "tagline": [
+        "Adds on-screen real-time weapon statistics display."
+      ],
+      "types": ["Utility"],
+      "latest": "1.0",
+      "versions": {
+        "1.0": "https://github.com/slserpent/bl-sdk-mods/raw/main/WeaponDebug/WeaponDebug.zip"
+      },
+	  "source": "https://github.com/slserpent/bl-sdk-mods/tree/main/WeaponDebug/",
+      "requirements": {
+        "Enums": ">=1.0"
+      }
+    },
+    {
+      "name": "Time of Day Changer",
+      "description": [
+        "Allows changing the current in-game time of day either to day, night, or forward in a fixed increment using hotkeys."
+      ],
+      "tagline": [
+        "Allows changing the current in-game time of day."
+      ],
+      "supports": ["BL2"],
+      "types": ["Utility"],
+      "latest": "1.0",
+      "versions": {
+        "1.0": "https://github.com/slserpent/bl-sdk-mods/raw/main/DayNight/DayNight.zip"
+      },
+	  "source": "https://github.com/slserpent/bl-sdk-mods/tree/main/DayNight"
+    }
+  ]
+}
