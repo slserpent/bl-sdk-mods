@@ -1,5 +1,5 @@
 import unrealsdk
-from Mods.ModMenu import RegisterMod, SDKMod, Keybind, EnabledSaveType, Mods, ModTypes
+from Mods.ModMenu import RegisterMod, SDKMod, Options, Keybind, EnabledSaveType, Mods, ModTypes
 
 class DayNight(SDKMod):
     Name: str = "Time of Day Changer"
@@ -18,6 +18,22 @@ class DayNight(SDKMod):
         Keybind("Set Night", "F6"),
         Keybind("Increment Time", "F7")
     ]
+    
+    def __init__(self) -> None:
+        self.Options = []
+        self.IncrementScale = Options.Slider (
+            Caption="Time Increment Scale (mins)",
+            Description="The granularity of time that the increment key will advance by.",
+            StartingValue=30,
+            MinValue=5,
+            MaxValue=360,
+            Increment=5,
+            IsHidden=False
+        )
+        
+        self.Options = [
+            self.IncrementScale
+        ]
 
     def GameInputPressed(self, input):
         if input.Name == "Set Day" or input.Name == "Set Night" or input.Name == "Increment Time":
@@ -26,13 +42,18 @@ class DayNight(SDKMod):
             if input.Name == "Set Night":
                 self.TimeOfDay = 32.0
             if input.Name == "Increment Time":
-                self.TimeOfDay += 1.0
+                #ratio of ticks in pandora day to minutes in an earth day
+                target_increment = self.IncrementScale.CurrentValue * (200/1440)
+                
                 #time scale seems to be 0 to 200, so wrap around at 200
-                if self.TimeOfDay > 199: self.TimeOfDay = 0.0
+                if self.TimeOfDay + target_increment >= 200:
+                    self.TimeOfDay = 0.0 + (self.TimeOfDay + target_increment - 200)
+                else:
+                    self.TimeOfDay += target_increment
                 
             daynight_seq: unrealsdk.UObject = unrealsdk.FindAll("WillowSeqAct_DayNightCycle")[0]
             daynight_seq.SetTimeOfDay(self.TimeOfDay)
-            unrealsdk.Log(f"Time of day set to {self.TimeOfDay}")
+            unrealsdk.Log(f"Time of day set to {self.TimeOfDay:.3f}")
         
 mod_instance = DayNight()
 # if __name__ == "__main__":
