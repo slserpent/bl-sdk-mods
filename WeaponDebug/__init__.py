@@ -1,5 +1,5 @@
 import unrealsdk
-from Mods.ModMenu import RegisterMod, SDKMod, Options, Keybind, EnabledSaveType, Mods, ModTypes
+from Mods.ModMenu import RegisterMod, SDKMod, SaveModSettings, Options, Keybind, EnabledSaveType, Mods, ModTypes
 from Mods.Enums import EModifierType
 
 class WeaponDebug(SDKMod):
@@ -8,7 +8,7 @@ class WeaponDebug(SDKMod):
     Description: str = (
         "Adds on-screen real-time weapon statistics display."
     )
-    Version: str = "1.0"
+    Version: str = "1.0.1"
     Types: ModTypes = ModTypes.Utility
     SaveEnabledState: EnabledSaveType = EnabledSaveType.LoadOnMainMenu
 
@@ -16,12 +16,24 @@ class WeaponDebug(SDKMod):
     ShowParts: bool = True
 
     Keybinds: list = [
-        Keybind("Toggle Display", "F3"),
+        Keybind("Toggle Stats", "F3"),
         Keybind("Toggle Parts", "F4")
     ]
 
     def __init__(self) -> None:
         self.Options = []
+        self.ShowStatsDisplay = Options.Boolean (
+            Caption="Show Stats Display",
+            Description="Show Stats Display.",
+            StartingValue=True,
+            IsHidden=True
+        )
+        self.ShowPartsDisplay = Options.Boolean (
+            Caption="Show Parts Display",
+            Description="Show Parts Display.",
+            StartingValue=True,
+            IsHidden=True
+        )
         self.RedSlider = Options.Slider (
             Caption="Red",
             Description="Red value for the text color.",
@@ -103,8 +115,35 @@ class WeaponDebug(SDKMod):
         self.Options = [
             self.TextColor,
             self.TextPos,
-            self.SizeSlider
+            self.SizeSlider,
+            self.ShowStatsDisplay,
+            self.ShowPartsDisplay
         ]
+                
+    def GameInputPressed(self, input):
+        if input.Name == "Toggle Stats":
+            self.ShowStats = not self.ShowStats
+            self.ShowStatsDisplay.CurrentValue = self.ShowStats
+        if input.Name == "Toggle Parts":
+            self.ShowParts = not self.ShowParts
+            self.ShowPartsDisplay.CurrentValue = self.ShowParts
+        SaveModSettings(self)
+
+    def Enable(self):
+        def onPostRender(caller: unrealsdk.UObject, function: unrealsdk.UFunction, params: unrealsdk.FStruct) -> bool:
+            self.displayDebug(params)
+            return True
+
+        unrealsdk.RegisterHook("WillowGame.WillowGameViewportClient.PostRender", "Postrender", onPostRender)
+        self.ShowStats = self.ShowStatsDisplay.CurrentValue
+        self.ShowParts = self.ShowPartsDisplay.CurrentValue
+
+    def Disable(self):
+        unrealsdk.RemoveHook("WillowGame.WillowGameViewportClient.PostRender", "Postrender")
+        self.ShowStats = False
+        self.ShowParts = False
+                
+                
     def eval_attr(self, attribute_name: str, get_base = False):
         attribute = unrealsdk.FindObject("AttributeDefinition", attribute_name)
         return self.eval_attr_obj(attribute, get_base)
@@ -181,6 +220,9 @@ class WeaponDebug(SDKMod):
                         attrib_value = attrib_grades[attrib_upgrade.SlotName] * attrib_upgrade.GradeIncrease
                         if attrib_value > 0:
                             attrib_value = "+" + str(round(attrib_value, 2))
+                        elif attrib_value == 0:
+                            #if the value is 0 (unchanged), then skip this attribute
+                            continue
                         else:
                             attrib_value = "-" + str(round(abs(attrib_value), 2))
                         part_info += f" {part.Name}: {attrib_upgrade.SlotName} {attrib_value} ({attrib_upgrade.GradeIncrease}grd)\n"
@@ -241,28 +283,6 @@ class WeaponDebug(SDKMod):
                 
             canvas.DrawText(text, False, scalex, scaley, FontRenderInfo)
         return True
-
-
-    def GameInputPressed(self, input):
-        if input.Name == "Toggle Display":
-            self.ShowStats = not self.ShowStats
-        if input.Name == "Toggle Parts":
-            self.ShowParts = not self.ShowParts
-
-    def Enable(self):
-        def onPostRender(caller: unrealsdk.UObject, function: unrealsdk.UFunction, params: unrealsdk.FStruct) -> bool:
-            self.displayDebug(params)
-            return True
-
-        unrealsdk.RegisterHook("WillowGame.WillowGameViewportClient.PostRender", "Postrender", onPostRender)
-        # unrealsdk.Log("weapon debug loaded")
-
-    def Disable(self):
-        unrealsdk.RemoveHook("WillowGame.WillowGameViewportClient.PostRender", "Postrender")
-        self.ShowStats = False
-        self.ShowParts = False
-        # unrealsdk.Log("weapon debug unloaded")
-        
         
 mod_instance = WeaponDebug()
 # if __name__ == "__main__":
