@@ -7,7 +7,7 @@ class DayNight(SDKMod):
     Description: str = (
         "Allows changing the current in-game time of day."
     )
-    Version: str = "1.0"
+    Version: str = "1.0.1"
     Types: ModTypes = ModTypes.Utility
     SaveEnabledState: EnabledSaveType = EnabledSaveType.LoadOnMainMenu
     

@@ -15,9 +15,9 @@
         "Adds on-screen real-time weapon statistics display."
       ],
       "types": ["Utility"],
-      "latest": "1.0",
+      "latest": "1.0.1",
       "versions": {
-        "1.0": "https://github.com/slserpent/bl-sdk-mods/raw/main/WeaponDebug/WeaponDebug.zip"
+        "1.0.1": "https://github.com/slserpent/bl-sdk-mods/raw/main/WeaponDebug/WeaponDebug.zip"
       },
 	  "source": "https://github.com/slserpent/bl-sdk-mods/tree/main/WeaponDebug/",
       "requirements": {
@@ -34,9 +34,9 @@
       ],
       "supports": ["BL2"],
       "types": ["Utility"],
-      "latest": "1.0",
+      "latest": "1.0.1",
       "versions": {
-        "1.0": "https://github.com/slserpent/bl-sdk-mods/raw/main/DayNight/DayNight.zip"
+        "1.0.1": "https://github.com/slserpent/bl-sdk-mods/raw/main/DayNight/DayNight.zip"
       },
 	  "source": "https://github.com/slserpent/bl-sdk-mods/tree/main/DayNight"
     }
